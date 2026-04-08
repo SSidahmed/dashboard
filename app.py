@@ -65,6 +65,22 @@ td {
     color: #0f3b2e !important;
 }
 
+/* ===== KPI ===== */
+.kpi-title {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #0f3b2e;
+    text-transform: uppercase;
+}
+
+.kpi-value {
+    font-size: 30px;
+    font-weight: 900;
+    color: #004b2d;
+    margin-top: 6px;
+}
+
 /* ===== STREAMLIT DATAFRAME OVERRIDE ===== */
 [data-testid="stDataFrame"] {
     background-color: white !important;
