@@ -20,9 +20,20 @@ st.markdown("""
 section[data-testid="stSidebar"] {
     background-color: var(--ocp-dark);
 }
-section[data-testid="stSidebar"] * {
+section[data-testid="stSidebar"] {
     color: white !important;
 }
+
+
+.card {
+    background: white;
+    color: #0f3b2e !important;
+}
+
+.card * {
+    color: #0f3b2e !important;
+}
+
 
 /* KPI */
 .card {
