@@ -121,12 +121,27 @@ def render():
         color_discrete_sequence=["#7a7a7a","#2e7d32","#1976d2"]
     )
 
+    fig1.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#0f3b2e",
+        title_font_size=16,
+        legend_title_text=""
+    )
+
     df_stock = pd.DataFrame({
         "Product":["Fert","Rock","Acid"],
         "Volume":[1600,800,300]
     })
 
     fig2 = px.pie(df_stock, values="Volume", names="Product", template="plotly_white")
+
+    fig2.update_layout(
+        plot_bgcolor="white",
+        paper_bgcolor="white",
+        font_color="#0f3b2e",
+        title_font_size=16
+ )
 
     df_status = pd.DataFrame({
         "Status":["Loading","Searching","At Anchor","In Transit","Planned"],
