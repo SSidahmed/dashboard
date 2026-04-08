@@ -3,7 +3,7 @@ import ocp_e2e
 
 st.set_page_config(layout="wide")
 
-# ---------- GLOBAL STYLE ----------
+# ---------- STYLE ----------
 st.markdown("""
 <style>
 
@@ -20,38 +20,60 @@ section[data-testid="stSidebar"] * {
     color: white !important;
 }
 
-/* ===== KPI CARDS ===== */
-.kpi {
+/* ===== KPI ===== */
+.card {
     background: white;
-    border-radius: 14px;
     padding: 14px;
+    border-radius: 14px;
     border: 1px solid #d9e6da;
 }
+
 .kpi-title {
     font-size: 12px;
     font-weight: 700;
 }
+
 .kpi-value {
     font-size: 26px;
     font-weight: 800;
     color: #004b2d;
 }
 
-/* ===== SECTION ===== */
+/* ===== SECTIONS ===== */
 .section {
     background: white;
-    border-radius: 14px;
     padding: 14px;
+    border-radius: 14px;
     border: 1px solid #d9e6da;
+}
+
+/* ===== TABLE STYLE ===== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+th {
+    background-color: #f1f5f3;
+    text-align: left;
+    padding: 8px;
+    font-weight: 700;
+}
+
+td {
+    padding: 8px;
+    border-bottom: 1px solid #e5e7eb;
 }
 
 /* ===== STATUS BADGES ===== */
 .badge {
-    padding: 4px 8px;
-    border-radius: 10px;
-    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 8px;
+    font-size: 11px;
     font-weight: 600;
 }
+
 .loading {background:#d0ebff;color:#0b7285;}
 .searching {background:#fff3bf;color:#e67700;}
 .anchor {background:#ffe3e3;color:#c92a2a;}
