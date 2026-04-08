@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import numpy as np
 
 def render():
 
@@ -15,61 +14,28 @@ def render():
 
     st.divider()
 
-    # ---------- KPI DATA ----------
-    available_volume = 2600
-    stock = 2700
-    flows = 28
-    transit = 4800
-    ontime = 91
+    # ---------- KPIs ----------
+    k1, k2, k3, k4, k5 = st.columns(5)
 
-    # ---------- KPI DISPLAY ----------
-    cols = st.columns(5)
-    kpis = [
-        ("PRODUCTION", "7.8 Mt"),
-        ("MOROCCO STOCKS", "2.7 Mt"),
-        ("TOTAL FLOWS", "28"),
-        ("IN TRANSIT", "4.8 Mt"),
-        ("ON-TIME", "91%")
-    ]
-
-    for col, (title, value) in zip(cols, kpis):
+    def kpi(col, title, value):
         with col:
             st.markdown(f"""
-            <div class="card">
+            <div class="kpi">
                 <div class="kpi-title">{title}</div>
                 <div class="kpi-value">{value}</div>
             </div>
             """, unsafe_allow_html=True)
 
+    kpi(k1, "PRODUCTION", "7.8 Mt")
+    kpi(k2, "MOROCCO STOCKS", "2.7 Mt")
+    kpi(k3, "TOTAL FLOWS", "28")
+    kpi(k4, "IN TRANSIT", "4.8 Mt")
+    kpi(k5, "ON-TIME", "91%")
+
     st.write("")
 
-    # ---------- PRODUCTION DATA ----------
-    months = ["Apr", "May", "Jun", "Jul", "Aug", "Sep"]
-
-    df_prod = pd.DataFrame({
-        "Month": months,
-        "Rock": [1200,1400,1600,1800,2000,2200],
-        "Fert": [1800,2000,2200,2400,2600,2800],
-        "Acid": [400,500,600,700,800,900]
-    })
-
-    fig_prod = px.bar(df_prod, x="Month", y=["Rock","Fert","Acid"],
-                      title="Production Plan",
-                      color_discrete_sequence=["#7a7a7a","#2e7d32","#1976d2"],
-                      template="plotly_white")
-
-    # ---------- STOCK DATA ----------
-    df_stock = pd.DataFrame({
-        "Product":["Fert","Rock","Acid"],
-        "Volume":[1600,800,300]
-    })
-
-    fig_stock = px.pie(df_stock, values="Volume", names="Product",
-                       title="Morocco Stocks",
-                       template="plotly_white")
-
-    # ---------- FLOWS TABLE ----------
-    df_flows = pd.DataFrame({
+    # ---------- FLOWS DATA ----------
+    df = pd.DataFrame({
         "Vessel":["MV Oceanic","MV Arrow","MV Green","MV Blue","MV Horizon"],
         "Product":["Fert","Rock","Fert","Acid","Fert"],
         "Volume":[65,55,40,30,70],
@@ -79,52 +45,80 @@ def render():
         "ETA":["Jun 05","Jun 10","Jun 08","May 25","Jun 12"]
     })
 
-    # ---------- LAYOUT ----------
+    # ---------- STATUS COLOR ----------
+    def style_status(val):
+        classes = {
+            "Loading":"loading",
+            "Searching":"searching",
+            "At Anchor":"anchor",
+            "In Transit":"transit",
+            "Planned":"planned",
+            "Arrived":"arrived"
+        }
+        return f'<span class="badge {classes[val]}">{val}</span>'
+
+    df["Status"] = df["Status"].apply(style_status)
+
+    # ---------- MAIN TABLE ----------
     c1, c2 = st.columns([3,1])
 
     with c1:
-        st.subheader("Flows Overview")
-        st.dataframe(df_flows, use_container_width=True)
+        st.markdown('<div class="section"><b>Flows Overview</b>', unsafe_allow_html=True)
+        st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with c2:
-        st.subheader("Deported Stocks")
+        st.markdown('<div class="section"><b>Deported Stocks</b>', unsafe_allow_html=True)
         st.dataframe(pd.DataFrame({
             "Location":["Brazil","West Africa","Europe"],
             "Stock":[1200,450,300],
             "Utilization":[68,55,45]
         }))
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.write("")
 
-    # ---------- SECOND ROW ----------
+    # ---------- OPEN DEST ----------
     b1, b2 = st.columns(2)
 
     with b1:
-        st.subheader("Open Destination Cargoes")
-        st.dataframe(df_flows[df_flows["Destination"]=="TBD"])
+        st.markdown('<div class="section"><b>Open Destination Cargoes</b>', unsafe_allow_html=True)
+        st.dataframe(df[df["Destination"]=="TBD"])
+        st.markdown('</div>', unsafe_allow_html=True)
 
     with b2:
-        st.subheader("Best Markets")
+        st.markdown('<div class="section"><b>Best Markets</b>', unsafe_allow_html=True)
         st.metric("India", "615 $/t")
         st.metric("Brazil", "575 $/t")
         st.metric("USA", "540 $/t")
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.write("")
 
-    # ---------- BOTTOM ----------
+    # ---------- CHARTS ----------
     d1, d2, d3 = st.columns(3)
 
-    with d1:
-        st.plotly_chart(fig_prod, use_container_width=True)
+    df_prod = pd.DataFrame({
+        "Month":["Apr","May","Jun","Jul","Aug","Sep"],
+        "Rock":[1200,1400,1600,1800,2000,2200],
+        "Fert":[1800,2000,2200,2400,2600,2800],
+        "Acid":[400,500,600,700,800,900]
+    })
 
-    with d2:
-        st.plotly_chart(fig_stock, use_container_width=True)
+    fig1 = px.bar(df_prod, x="Month", y=["Rock","Fert","Acid"], template="plotly_white")
 
-    with d3:
-        status_counts = df_flows["Status"].value_counts().reset_index()
-        status_counts.columns = ["Status","Count"]
+    df_stock = pd.DataFrame({
+        "Product":["Fert","Rock","Acid"],
+        "Volume":[1600,800,300]
+    })
 
-        fig_status = px.bar(status_counts, x="Status", y="Count",
-                            title="Volumes by Status")
+    fig2 = px.pie(df_stock, values="Volume", names="Product", template="plotly_white")
 
-        st.plotly_chart(fig_status, use_container_width=True)
+    df_status = pd.DataFrame(df["Status"].value_counts()).reset_index()
+    df_status.columns = ["Status","Count"]
+
+    fig3 = px.bar(df_status, x="Status", y="Count", template="plotly_white")
+
+    d1.plotly_chart(fig1, use_container_width=True)
+    d2.plotly_chart(fig2, use_container_width=True)
+    d3.plotly_chart(fig3, use_container_width=True)
