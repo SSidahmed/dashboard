@@ -69,11 +69,18 @@ def render():
 
     with c2:
         st.markdown('<div class="section"><b>Deported Stocks</b>', unsafe_allow_html=True)
-        st.dataframe(pd.DataFrame({
-            "Location":["Brazil","West Africa","Europe"],
-            "Stock":[1200,450,300],
-            "Utilization":[68,55,45]
-        }))
+
+        df_deported = pd.DataFrame({
+            "Location": ["Brazil", "West Africa", "Europe"],
+            "Stock": [1200, 450, 300],
+            "Utilization": [68, 55, 45]
+        })
+
+        st.markdown(
+            df_deported.to_html(index=False),
+            unsafe_allow_html=True
+        )
+
         st.markdown('</div>', unsafe_allow_html=True)
 
     st.write("")
