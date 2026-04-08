@@ -55,7 +55,8 @@ def render():
 
     fig_prod = px.bar(df_prod, x="Month", y=["Rock","Fert","Acid"],
                       title="Production Plan",
-                      color_discrete_sequence=["#7a7a7a","#2e7d32","#1976d2"])
+                      color_discrete_sequence=["#7a7a7a","#2e7d32","#1976d2"],
+                      template="plotly_white")
 
     # ---------- STOCK DATA ----------
     df_stock = pd.DataFrame({
@@ -64,7 +65,8 @@ def render():
     })
 
     fig_stock = px.pie(df_stock, values="Volume", names="Product",
-                       title="Morocco Stocks")
+                       title="Morocco Stocks",
+                       template="plotly_white")
 
     # ---------- FLOWS TABLE ----------
     df_flows = pd.DataFrame({
