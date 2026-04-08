@@ -36,7 +36,7 @@ def render():
 
     # ---------- FLOWS DATA ----------
     df = pd.DataFrame({
-        "Vessel":["MV Oceanic","MV Arrow","MV Green","MV Blue","MV Horizon"],
+        "Vessel":["MV Oceanic","MV Arrow","MV Green","MV Blue","SS Ducellier"],
         "Product":["Fert","Rock","Fert","Acid","Fert"],
         "Volume":[65,55,40,30,70],
         "Origin":["Jorf","Safi","Jorf","Safi","Jorf"],
