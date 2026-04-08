@@ -14,23 +14,23 @@ def render():
 
     st.divider()
 
-    # ---------- KPIs ----------
-    k1, k2, k3, k4, k5 = st.columns(5)
+    # ---------- KPI ----------
+    cols = st.columns(5)
 
     def kpi(col, title, value):
         with col:
             st.markdown(f"""
-            <div class="kpi">
+            <div class="card">
                 <div class="kpi-title">{title}</div>
                 <div class="kpi-value">{value}</div>
             </div>
             """, unsafe_allow_html=True)
 
-    kpi(k1, "PRODUCTION", "7.8 Mt")
-    kpi(k2, "MOROCCO STOCKS", "2.7 Mt")
-    kpi(k3, "TOTAL FLOWS", "28")
-    kpi(k4, "IN TRANSIT", "4.8 Mt")
-    kpi(k5, "ON-TIME", "91%")
+    kpi(cols[0], "PRODUCTION", "7.8 Mt")
+    kpi(cols[1], "MOROCCO STOCKS", "2.7 Mt")
+    kpi(cols[2], "TOTAL FLOWS", "28")
+    kpi(cols[3], "IN TRANSIT", "4.8 Mt")
+    kpi(cols[4], "ON-TIME", "91%")
 
     st.write("")
 
@@ -45,7 +45,7 @@ def render():
         "ETA":["Jun 05","Jun 10","Jun 08","May 25","Jun 12"]
     })
 
-    # ---------- STATUS COLOR ----------
+    # ---------- STATUS BADGE ----------
     def style_status(val):
         classes = {
             "Loading":"loading",
@@ -64,7 +64,7 @@ def render():
 
     with c1:
         st.markdown('<div class="section"><b>Flows Overview</b>', unsafe_allow_html=True)
-        st.write(df.to_html(escape=False, index=False), unsafe_allow_html=True)
+        st.markdown(df.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with c2:
@@ -83,7 +83,8 @@ def render():
 
     with b1:
         st.markdown('<div class="section"><b>Open Destination Cargoes</b>', unsafe_allow_html=True)
-        st.dataframe(df[df["Destination"]=="TBD"])
+        filtered = df[df["Destination"]=="TBD"]
+        st.markdown(filtered.to_html(escape=False, index=False), unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
 
     with b2:
@@ -105,7 +106,13 @@ def render():
         "Acid":[400,500,600,700,800,900]
     })
 
-    fig1 = px.bar(df_prod, x="Month", y=["Rock","Fert","Acid"], template="plotly_white")
+    fig1 = px.bar(
+        df_prod,
+        x="Month",
+        y=["Rock","Fert","Acid"],
+        template="plotly_white",
+        color_discrete_sequence=["#7a7a7a","#2e7d32","#1976d2"]
+    )
 
     df_stock = pd.DataFrame({
         "Product":["Fert","Rock","Acid"],
@@ -114,8 +121,10 @@ def render():
 
     fig2 = px.pie(df_stock, values="Volume", names="Product", template="plotly_white")
 
-    df_status = pd.DataFrame(df["Status"].value_counts()).reset_index()
-    df_status.columns = ["Status","Count"]
+    df_status = pd.DataFrame({
+        "Status":["Loading","Searching","At Anchor","In Transit","Planned"],
+        "Count":[5,4,3,6,2]
+    })
 
     fig3 = px.bar(df_status, x="Status", y="Count", template="plotly_white")
 
