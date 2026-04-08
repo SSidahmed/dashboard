@@ -38,6 +38,11 @@ section[data-testid="stSidebar"] {
     color: white !important;
 }
 
+[data-testid="stDataFrame"] {
+    background-color: white !important;
+    color: #0f3b2e !important;
+}
+
 /* ===== KPI / CARDS ===== */
 .card {
     background: white;
